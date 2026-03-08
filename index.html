@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hand Prototype</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="map_style.css">
+    <script>console.log('HEAD SCRIPT')</script>
+</head>
+
+<body>
+    <div id="game-container">
+        <header>
+            <div class="run-info-panel">
+                <div class="run-row">
+                    <span class="label">الجولة (Ante)</span>
+                    <span id="ante-display" class="value">1</span>
+                </div>
+                <div class="run-row blind-name">
+                    <span id="blind-name-display">الرهان الصغير (Small Blind)</span>
+                </div>
+                <div class="run-row gold-row">
+                    <span class="label">المال (Gold)</span>
+                    <span id="gold-display" class="value" style="color:var(--gold);">$0</span>
+                </div>
+            </div>
+
+            <div class="score-panel">
+                <div class="score-row">
+                    <span class="label">النقاط (Score)</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="score-row target-row">
+                    <span class="label">الهدف (Target)</span>
+                    <span id="target-score" class="value target">300</span>
+                </div>
+            </div>
+
+            <div class="math-panel">
+                <div id="word-status" class="word-status invalid">غير معروفة (Invalid)</div>
+                <div class="math-pills">
+                    <div class="score-pill chips-pill" id="current-chips">0</div>
+                    <div class="score-multiply">X</div>
+                    <div class="score-pill mult-pill" id="current-mult">0</div>
+                </div>
+            </div>
+
+            <div class="limits-panel">
+                <div class="limit-box blue-box">
+                    <span class="label">العب</span>
+                    <span id="plays-left" class="value">4</span>
+                </div>
+                <div class="limit-box red-box">
+                    <span class="label">تغيير</span>
+                    <span id="discards-left" class="value">3</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="top-racks-container">
+                <div class="joker-rack-container">
+                    <h3 class="joker-title">العلماء (The Scholars)</h3>
+                    <div id="joker-rack" class="joker-rack">
+                        <!-- Jokers injected here -->
+                        <div class="empty-joker-slot"></div>
+                        <div class="empty-joker-slot"></div>
+                        <div class="empty-joker-slot"></div>
+                        <div class="empty-joker-slot"></div>
+                        <div class="empty-joker-slot"></div>
+                    </div>
+                </div>
+
+                <div class="consumable-rack-container">
+                    <h3 class="joker-title">المحبرة (Ink Pots)</h3>
+                    <div id="consumable-rack" class="consumable-rack">
+                        <!-- Consumables injected here -->
+                        <div class="empty-consumable-slot"></div>
+                        <div class="empty-consumable-slot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="play-area">
+                <div
+                    style="text-align:center; color:#f59e0b; font-size:1.1rem; margin-bottom: 5px; font-family: 'Aref Ruqaa', serif;">
+                    الحرف الأساسي للربط (Required Anchor):</div>
+                <div id="anchor-zone"
+                    style="display:flex; justify-content:center; align-items:center; min-height:80px; margin-bottom:15px; border: 2px dashed rgba(245, 158, 11, 0.3); border-radius:10px; padding: 10px;">
+                </div>
+
+                <h2 class="title" style="margin-top:10px;">الكلمة الملعوبة (Played Word)</h2>
+                <div id="played-word" class="word-slots">
+                    <!-- Played cards injected here -->
+                </div>
+                <div class="action-buttons">
+                    <button id="btn-play">العب الكلمة (Play Word)</button>
+                    <button id="btn-clear" class="secondary">استرجاع البطاقات (Recall Cards)</button>
+                    <button id="btn-next-round" class="hidden" style="background:var(--gold);color:#000;">الجولة التالية
+                        (Next Round)</button>
+                </div>
+                <div class="possible-words-container">
+                    <div class="subtitle-minimal">الكلمات الممكنة:</div>
+                    <div id="possible-words-list" class="words-list-minimal">
+                        <!-- Stats injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="hand-area">
+                <div class="hand-header">
+                    <h2 class="title">اليد (The Hand)</h2>
+                    <span id="discards-left">تغيير الحبر: 3</span>
+                </div>
+                <div id="player-hand" class="hand">
+                    <!-- Hand cards injected via JS -->
+                </div>
+                <div class="hand-actions">
+                    <button id="btn-discard" class="secondary">تغيير البطاقات (Discard Selected)</button>
+                </div>
+            </div>
+
+    </div>
+    </main>
+
+    <div id="feedback-overlay" class="hidden">
+        <h1 id="feedback-text"></h1>
+        <h2 id="feedback-score"></h2>
+    </div>
+
+    <div id="shop-overlay" class="hidden">
+        <div class="shop-modal">
+            <div class="shop-header">
+                <h2>المتجر (The Shop)</h2>
+                <div class="shop-gold-balance" id="shop-gold-balance">$0</div>
+            </div>
+            <p style="text-align:center; color:#94a3b8; margin-bottom: 20px;">استأجر علماء لزيادة قوة كلماتك بخصائص
+                فريدة</p>
+            <div id="shop-items" class="shop-items">
+                <!-- Shop cards generated here -->
+            </div>
+            <div class="shop-footer">
+                <button id="btn-leave-shop"
+                    style="background-color: var(--accent-red); color: white; width: 100%;">مغادرة المتجر (Leave
+                    Shop)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="anchor-draft-overlay" class="hidden"
+        style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div class="draft-modal"
+            style="background: var(--surface-light); padding: 30px; border-radius: 12px; max-width: 800px; width: 90%; text-align: center; border: 2px solid var(--accent-gold);">
+            <div class="draft-header" style="margin-bottom: 20px;">
+                <h2 style="color: var(--accent-gold); font-size: 2em; margin-bottom: 10px;">اختر الحرف الأساسي
+                    (Draft Anchor)</h2>
+                <p style="color: #94a3b8; font-size: 1.1em;">المستوى الحالي: <span id="draft-ante-display">1</span>
+                </p>
+                <p style="color: var(--text-light); margin-top: 10px;">يجب استخدام هذا الحرف (أو الحروف) في كل كلمة
+                    في هذا المستوى. الحروف الصعبة تعطي مكافآت إضافية!</p>
+            </div>
+            <div id="draft-options-container"
+                style="display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                <!-- Anchor options generated here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="map-overlay">
+        <div class="map-modal">
+            <div class="map-header">
+                <h2>الخريطة (The Map)</h2>
+                <p>المستوى الحالي: <span id="map-ante-display">1</span></p>
+            </div>
+            <!-- We will generate nodes dynamically -->
+            <div id="map-nodes-container" class="map-nodes">
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="arabic_dictionary.js"></script>
+    <script src="map_core.js"></script>
+    <script>console.log("INLINE SCRIPT EXECUTED!");</script>
+</body>
+
+</html>
